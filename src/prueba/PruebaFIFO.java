@@ -15,11 +15,15 @@ public class PruebaFIFO {
 		int contador = 0;
 		FIFO fifo = new FIFO();
 		while(true){
-			Nodo nodo = fifo.getCabeza();
-			while(nodo != null){
+			Nodo cabeza = fifo.getCabeza();
+			Nodo nodo = cabeza.getSig();
+			int total = 0;
+			while(nodo != cabeza){
 				System.out.println("===> "+nodo.getNombre()+": "+nodo.getUbicacion());
 				nodo = nodo.getSig();
+				total++;
 			}
+			System.out.println("Total de procesos en ejecucion: "+total);
 			String in = scan.nextLine();
 			if(in.equals("1")){
 			    Random rand = new Random();
@@ -31,6 +35,8 @@ public class PruebaFIFO {
 			} else if(in.equals("2")){
 				fifo.remover();
 			} else if(in.equals("3")){
+				fifo.terminar();
+			} else if(in.equals("4")){
 				break;
 			}
 		}
