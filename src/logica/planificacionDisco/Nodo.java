@@ -1,13 +1,15 @@
-package logica;
+package logica.planificacionDisco;
 
 public class Nodo {
 	private String nombre;
-	private int ubicacion;
+	private int rafaga;
+	private int llegada;
 	private Nodo sig;
 	
-	public Nodo(String nombre, int ubicacion) {
+	public Nodo(String nombre, int ubicacion, int llegada) {
 		this.nombre = nombre;
-		this.ubicacion = ubicacion;
+		this.rafaga = ubicacion;
+		this.llegada = llegada;
 		this.sig = null;
 	}
 	
@@ -18,11 +20,7 @@ public class Nodo {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
-	public void setUbicacion(int ubicacion) {
-		this.ubicacion = ubicacion;
-	}
-
+	
 	public Nodo getSig() {
 		return sig;
 	}
@@ -31,8 +29,11 @@ public class Nodo {
 		return nombre;
 	}
 
-	public int getUbicacion() {
-		return ubicacion;
+	public int getRafaa() {
+		return rafaga;
 	}
 	
+	public int getLlegada(){
+		return llegada;
+	}
 }
