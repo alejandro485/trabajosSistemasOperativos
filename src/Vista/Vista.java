@@ -49,13 +49,13 @@ public class Vista extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		btnAgregar = new JButton("Agregar");
+		btnAgregar = new JButton("Apilar");
 		btnAgregar.setBounds(20, 20, 117, 25);
 		btnAgregar.setActionCommand("ag");
 		btnAgregar.addActionListener(this);
 		contentPane.add(btnAgregar);
 
-		btnGraficar = new JButton("Graficar");
+		btnGraficar = new JButton("Atender");
 		btnGraficar.setBounds(157, 20, 117, 25);
 		btnGraficar.setActionCommand("gr");
 		btnGraficar.addActionListener(this);

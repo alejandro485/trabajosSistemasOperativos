@@ -4,11 +4,15 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
+import javax.swing.Timer;
 
 import logica.calculos.RegistroCalculo;
 
-public class CanvasGantt extends Canvas{
+public class CanvasGantt extends Canvas implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -20,9 +24,13 @@ public class CanvasGantt extends Canvas{
 	private int wt;
 	private int ht;
 	private Color[] colores;
+	private int tiempoActual;
+	private boolean finalizadoProcesos;
+	private Timer timer;
 	
 	public CanvasGantt() {
-		this.segmentoHorizontal = 10;
+		this.setBackground(Color.white);
+		this.segmentoHorizontal = 20;
 		this.segmentoVertical = 20;
 		this.wt = 0;
 		this.ht = 0;
@@ -39,7 +47,10 @@ public class CanvasGantt extends Canvas{
 	
 	public void setRegistro(ArrayList<RegistroCalculo> registros) {
 		this.registros = registros;
-		this.repaint();
+		this.tiempoActual = 0;
+		this.finalizadoProcesos = false;
+		this.timer = new Timer (1000, this);
+		this.timer.start();
 	}
 	
 	public void update(Graphics g) {
@@ -75,7 +86,7 @@ public class CanvasGantt extends Canvas{
 				segmentoHorizontal * (2 + columns),
 				(segmentoVertical * 3/2));
 		for(int i = 0; i<=columns; i++){
-			//graficas.drawString(i+"", segmentoHorizontal * (i + 2), segmentoVertical);
+			graficas.drawString(i+"", segmentoHorizontal * (i + 2), segmentoVertical);
 			graficas.drawLine(
 					segmentoHorizontal * (i + 2),
 					segmentoVertical,
@@ -83,21 +94,52 @@ public class CanvasGantt extends Canvas{
 					segmentoVertical *(3+lines));
 		}
 		for(int i = 0; i<lines; i++) {
-			graficas.setColor(colores[i % colores.length]);
 			RegistroCalculo rc = registros.get(i);
-			graficas.fillRect(
-				(rc.getLlegada()+ rc.getEspera() + 2)*segmentoHorizontal,
-				(i + 2)*segmentoVertical,
-				segmentoHorizontal * rc.getRafada(),
-				segmentoVertical);
-			graficas.setColor(Color.black);
-			graficas.drawString(rc.getNombre(), segmentoHorizontal - 7, (i + 3) * segmentoVertical - 7);
-			graficas.fillRect(
-				(rc.getLlegada() + 2) * segmentoHorizontal,
-				(i + 2) * segmentoVertical + 7,
-				segmentoHorizontal * rc.getEspera(),
-				segmentoVertical * 1/3);
+			if(rc.getLlegada() < this.tiempoActual) {
+				int anchoEspera = 0;
+				if (rc.getLlegada()+ rc.getEspera() < this.tiempoActual) {
+					anchoEspera = rc.getEspera();
+				} else {
+					anchoEspera = this.tiempoActual - rc.getLlegada();
+				}
+				// pintar tiempo espera
+				graficas.setColor(Color.black);
+				graficas.drawString(rc.getNombre(), segmentoHorizontal - 7, (i + 3) * segmentoVertical - 7);
+				graficas.fillRect(
+					(rc.getLlegada() + 2) * segmentoHorizontal,
+					(i + 2) * segmentoVertical + 7,
+					segmentoHorizontal * anchoEspera,
+					segmentoVertical * 1/3);
+				// pintar ejecucion
+				if (rc.getLlegada()+ rc.getEspera() < this.tiempoActual) {
+					int anchoRafaga = 0;
+					if (rc.getLlegada()+ rc.getEspera()+rc.getRafada() < this.tiempoActual) {
+						anchoRafaga = rc.getRafada();
+					} else {
+						anchoRafaga = this.tiempoActual - (rc.getLlegada()+ rc.getEspera());
+					}
+					graficas.setColor(colores[i % colores.length]);
+					graficas.fillRect(
+							(rc.getLlegada()+ rc.getEspera() + 2)*segmentoHorizontal,
+							(i + 2)*segmentoVertical,
+							segmentoHorizontal * anchoRafaga,
+							segmentoVertical);
+				}
+				//verificacion terminacion
+				if(i == lines - 1){
+					this.finalizadoProcesos = (rc.getTranscurrido() <= this.tiempoActual);
+				}
+			}
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		this.repaint();
+		if(this.finalizadoProcesos){
+			this.timer.stop();
+		}
+		this.tiempoActual++;
 	}
 
 }
