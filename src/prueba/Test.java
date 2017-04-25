@@ -7,7 +7,7 @@ import logica.fabricaPlanificadores.Generador;
 import logica.planificacionDisco.Nodo;
 import logica.planificacionDisco.Planificacion;
 
-public class PruebaFIFO {
+public class Test {
 	
 	private static Scanner scan;
 	private static Generador generador;
@@ -17,13 +17,13 @@ public class PruebaFIFO {
 		scan = new Scanner(System.in);
 		int contador = 0;
 		int anteriorLlegada = 0;
-		Planificacion fifo = generador.getPlanificador("FIFO");
+		Planificacion fifo = generador.getPlanificador("SJF");
 		while(true){
 			Nodo cabeza = fifo.getCabeza();
 			Nodo nodo = cabeza.getSig();
 			int total = 0;
 			while(nodo != cabeza){
-				System.out.println("===> "+nodo.getNombre()+": "+nodo.getLlegada()+", "+nodo.getRafaa());
+				System.out.println("===> "+nodo.getNombre()+": "+nodo.getLlegada()+", "+nodo.getRafaga());
 				nodo = nodo.getSig();
 				total++;
 			}
@@ -31,12 +31,13 @@ public class PruebaFIFO {
 			String in = scan.nextLine();
 			if(in.equals("1")){
 			    Random rand = new Random();
-			    int randomNum = rand.nextInt(20);
+			    int randomNum = rand.nextInt(5);
 			    for(int i = 0; i< randomNum; i++){
-			    	fifo.agregar("p"+contador, rand.nextInt(200), anteriorLlegada);
+			    	fifo.agregar("p"+contador, 1+rand.nextInt(5), anteriorLlegada);
 			    	anteriorLlegada += rand.nextInt(5);
 			    	contador++;
 			    }
+			    System.out.println("-----------------------------");
 			} else if(in.equals("2")){
 				fifo.remover();
 			} else if(in.equals("3")){

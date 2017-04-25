@@ -5,22 +5,22 @@ public class Nodo {
 	private int rafaga;
 	private int llegada;
 	private Nodo sig;
-	
+
 	public Nodo(String nombre, int ubicacion, int llegada) {
 		this.nombre = nombre;
 		this.rafaga = ubicacion;
 		this.llegada = llegada;
 		this.sig = null;
 	}
-	
-	public void setSig(Nodo sig){
+
+	public void setSig(Nodo sig) {
 		this.sig = sig;
 	}
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	
+
 	public Nodo getSig() {
 		return sig;
 	}
@@ -29,11 +29,11 @@ public class Nodo {
 		return nombre;
 	}
 
-	public int getRafaa() {
+	public int getRafaga() {
 		return rafaga;
 	}
-	
-	public int getLlegada(){
+
+	public int getLlegada() {
 		return llegada;
 	}
 }

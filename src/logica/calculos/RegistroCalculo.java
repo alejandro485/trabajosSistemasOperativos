@@ -11,7 +11,7 @@ public class RegistroCalculo {
 	private String nombre;
 	
 	public RegistroCalculo(Nodo nodo, int finalAnt) {
-		this(nodo.getNombre(), nodo.getLlegada(), nodo.getRafaa(), finalAnt);
+		this(nodo.getNombre(), nodo.getLlegada(), nodo.getRafaga(), finalAnt);
 	}
 
 	public RegistroCalculo(String nombre,int llegada, int rafaga, int finalAnt) {

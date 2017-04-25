@@ -71,7 +71,7 @@ public class Vista extends JFrame implements ActionListener {
 		
 		calculos = new Calculos();
 		generador = new Generador();
-		calculos.setPlanificador(generador.getPlanificador("FIFO"));
+		calculos.setPlanificador(generador.getPlanificador("SJF"));
 		
 	}
 

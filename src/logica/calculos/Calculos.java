@@ -44,9 +44,6 @@ public class Calculos {
 	}
 
 	public void calcular() {
-		registros.clear();
-		anteriorLlegada = 0;
-		contador = 0;
 		int finalAnt = 0;
 		Nodo nodo = planificador.remover();
 		while(nodo != this.cabeza){
@@ -55,6 +52,12 @@ public class Calculos {
 			registros.add(rc);
 			nodo = planificador.remover();
 		}
+	}
+	
+	public void limpiar() {
+		this.registros.clear();
+		this.anteriorLlegada = 0;
+		this.contador = 0;
 	}
 	
 }
