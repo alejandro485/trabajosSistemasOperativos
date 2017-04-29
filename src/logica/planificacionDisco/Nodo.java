@@ -36,4 +36,5 @@ public class Nodo {
 	public int getLlegada() {
 		return llegada;
 	}
+	
 }

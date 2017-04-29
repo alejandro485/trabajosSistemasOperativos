@@ -13,6 +13,7 @@ public class Calculos {
 	private ArrayList<RegistroCalculo> registros;
 	private int contador;
 	private int anteriorLlegada;
+	private int finalAnt;
 	
 	public Calculos() {
 		this.contador = 0;
@@ -44,7 +45,6 @@ public class Calculos {
 	}
 
 	public void calcular() {
-		int finalAnt = 0;
 		Nodo nodo = planificador.remover();
 		while(nodo != this.cabeza){
 			RegistroCalculo rc = new RegistroCalculo(nodo, finalAnt);
@@ -52,9 +52,11 @@ public class Calculos {
 			registros.add(rc);
 			nodo = planificador.remover();
 		}
+		this.anteriorLlegada = this.finalAnt;
 	}
 	
 	public void limpiar() {
+		this.finalAnt = 0;
 		this.registros.clear();
 		this.anteriorLlegada = 0;
 		this.contador = 0;

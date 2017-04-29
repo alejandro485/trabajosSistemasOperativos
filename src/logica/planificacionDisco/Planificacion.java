@@ -4,6 +4,8 @@ public abstract class Planificacion {
 
 	protected Nodo cabeza;
 
+	abstract public void agregar(String nombre, int ubicacion, int llegada);
+
 	public Nodo remover() {
 		Nodo cabSig = this.cabeza.getSig();
 		this.cabeza.setSig(cabSig.getSig());
@@ -15,9 +17,8 @@ public abstract class Planificacion {
 		this.cabeza.setSig(this.cabeza);
 	}
 
-	abstract public void agregar(String nombre, int ubicacion, int llegada);
-
 	public Nodo getCabeza() {
 		return this.cabeza;
 	}
+	
 }
