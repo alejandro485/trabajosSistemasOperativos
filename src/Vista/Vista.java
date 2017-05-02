@@ -3,6 +3,8 @@ package Vista;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,7 +17,7 @@ import logica.calculos.Calculos;
 import logica.calculos.RegistroCalculo;
 import logica.fabricaPlanificadores.Generador;
 
-public class Vista extends JFrame implements ActionListener {
+public class Vista extends JFrame implements ActionListener, KeyListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,7 +25,6 @@ public class Vista extends JFrame implements ActionListener {
 	private Generador generador;
 
 	private JPanel contentPane;
-	private JButton btnGraficar;
 	private JButton btnAgregar;
 	private JButton btnLimpiar;
 	
@@ -50,56 +51,51 @@ public class Vista extends JFrame implements ActionListener {
 	public Vista() {
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1000, 660);
+		setBounds(100, 100, 1000, 640);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		addKeyListener(this);
 
-		btnAgregar = new JButton("Apilar");
+		btnAgregar = new JButton("Agregar y atender");
 		btnAgregar.setBounds(20, 20, 250, 30);
 		btnAgregar.setActionCommand("ag");
 		btnAgregar.addActionListener(this);
 		contentPane.add(btnAgregar);
-
-		btnGraficar = new JButton("Atender");
-		btnGraficar.setBounds(20, 70, 250, 30);
-		btnGraficar.setActionCommand("gr");
-		btnGraficar.addActionListener(this);
-		contentPane.add(btnGraficar);
 		
 		btnLimpiar = new JButton("Limpiar");
-		btnLimpiar.setBounds(20, 120, 250, 30);
+		btnLimpiar.setBounds(20, 70, 250, 30);
 		btnLimpiar.setActionCommand("lm");
 		btnLimpiar.addActionListener(this);
 		contentPane.add(btnLimpiar);
 		
 		btnAbajo = new JButton("v");
-		btnAbajo.setBounds(290, 580, 60, 30);
+		btnAbajo.setBounds(290, 570, 60, 30);
 		btnAbajo.setActionCommand("ab");
 		btnAbajo.addActionListener(this);
 		contentPane.add(btnAbajo);
 		
 		btnArriba = new JButton("^");
-		btnArriba.setBounds(370, 580, 60, 30);
+		btnArriba.setBounds(370, 570, 60, 30);
 		btnArriba.setActionCommand("ar");
 		btnArriba.addActionListener(this);
 		contentPane.add(btnArriba);
 		
 		btnDerecha = new JButton(">");
-		btnDerecha.setBounds(450, 580, 60, 30);
+		btnDerecha.setBounds(450, 570, 60, 30);
 		btnDerecha.setActionCommand("de");
 		btnDerecha.addActionListener(this);
 		contentPane.add(btnDerecha);
 		
 		btnIzquierda = new JButton("<");
-		btnIzquierda.setBounds(530, 580, 60, 30);
+		btnIzquierda.setBounds(530, 570, 60, 30);
 		btnIzquierda.setActionCommand("iz");
 		btnIzquierda.addActionListener(this);
 		contentPane.add(btnIzquierda);
 		
 		tbCalculos = new JTable();
-		tbCalculos.setBounds(20, 160, 250, 450);
+		tbCalculos.setBounds(20, 120, 250, 480);
 		contentPane.add(tbCalculos);
 
 		canvas = new CanvasGantt();
@@ -109,6 +105,7 @@ public class Vista extends JFrame implements ActionListener {
 		calculos = new Calculos();
 		generador = new Generador();
 		calculos.setPlanificador(generador.getPlanificador("SJF"));
+		this.setFocusable(true);
 		
 	}
 
@@ -116,8 +113,6 @@ public class Vista extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("ag")){
 			calculos.agregar();
-			
-		} else if(e.getActionCommand().equals("gr")) {
 			calculos.calcular();
 			canvas.setRegistro(calculos.getRegistros());
 			DefaultTableModel model=new DefaultTableModel();
@@ -143,6 +138,8 @@ public class Vista extends JFrame implements ActionListener {
 			tbCalculos.setModel(model);
 		} else if (e.getActionCommand().equals("lm")) {
 			calculos.limpiar();
+			DefaultTableModel model=new DefaultTableModel();
+			tbCalculos.setModel(model);
 			canvas.repaint();
 		} else if (e.getActionCommand().equals("ab")) {
 			canvas.cambioSeccionImagen(2);
@@ -153,5 +150,31 @@ public class Vista extends JFrame implements ActionListener {
 		} else if (e.getActionCommand().equals("iz")) {
 			canvas.cambioSeccionImagen(3);
 		}
+		this.setFocusable(true);
 	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+	    int keyCode = e.getKeyCode();
+	    switch( keyCode ) { 
+	        case KeyEvent.VK_UP:
+	            canvas.cambioSeccionImagen(1);
+	            break;
+	        case KeyEvent.VK_DOWN:
+	            canvas.cambioSeccionImagen(2);
+	            break;
+	        case KeyEvent.VK_LEFT:
+	            canvas.cambioSeccionImagen(3);
+	            break;
+	        case KeyEvent.VK_RIGHT :
+	            canvas.cambioSeccionImagen(4);
+	            break;
+	     }
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {}
 }

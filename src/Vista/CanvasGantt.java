@@ -66,7 +66,7 @@ public class CanvasGantt extends Canvas implements ActionListener{
 		this.registros = registros;
 		this.tiempoActual = 0;
 		this.finalizadoProcesos = false;
-		this.timer = new Timer (100, this);
+		this.timer = new Timer (1000, this);
 		this.timer.start();
 	}
 	
@@ -97,22 +97,6 @@ public class CanvasGantt extends Canvas implements ActionListener{
 		graficas = imagen.getGraphics();
 		graficas.setColor(Color.white);
 		graficas.fillRect(0,0 , this.wt, this.ht);
-		graficas.setColor(Color.black);
-		// pintar numeros
-		for(int i = 0; i<=columns; i++){
-			graficas.drawString(i+"", segmentoHorizontal * (i + 2), segmentoVertical);
-			graficas.drawString(i+"", segmentoHorizontal * (i + 2), segmentoVertical * (lines + 5));
-			graficas.drawLine(
-					segmentoHorizontal * (i + 2),
-					segmentoVertical,
-					segmentoHorizontal * (i + 2),
-					segmentoVertical *(3+lines));
-		}
-		graficas.drawLine(
-				segmentoHorizontal * 2,
-				(segmentoVertical * 3/2),
-				segmentoHorizontal * (2 + columns),
-				(segmentoVertical * 3/2));
 		for(int i = 0; i<lines; i++) {
 			RegistroCalculo rc = registros.get(i);
 			if(rc.getLlegada() < this.tiempoActual) {
@@ -156,6 +140,22 @@ public class CanvasGantt extends Canvas implements ActionListener{
 				}
 			}
 		}
+		// pintar numeros
+		graficas.setColor(Color.black);
+		for(int i = 0; i<=columns; i++){
+			graficas.drawString(i+"", segmentoHorizontal * (i + 2), segmentoVertical);
+			graficas.drawString(i+"", segmentoHorizontal * (i + 2), segmentoVertical * (lines + 5));
+			graficas.drawLine(
+					segmentoHorizontal * (i + 2),
+					segmentoVertical,
+					segmentoHorizontal * (i + 2),
+					segmentoVertical *(4 + lines));
+		}
+		graficas.drawLine(
+				segmentoHorizontal * 2,
+				(segmentoVertical * 3/2),
+				segmentoHorizontal * (2 + columns),
+				(segmentoVertical * 3/2));
 		return imagen.getSubimage(this.pocX, this.pocY, this.getWidth(), this.getHeight());
 	}
 	

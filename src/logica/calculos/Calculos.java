@@ -36,10 +36,10 @@ public class Calculos {
 	
 	public void agregar() {
 	    Random rand = new Random();
-	    int randomNum = rand.nextInt(10);
+	    int randomNum = rand.nextInt(20);
 	    for(int i = 0; i< randomNum; i++){
 	    	planificador.agregar("p"+contador, 1+rand.nextInt(5), anteriorLlegada);
-	    	anteriorLlegada += rand.nextInt(5);
+	    	anteriorLlegada += rand.nextInt(3);
 	    	contador++;
 	    }
 	}
