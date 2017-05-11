@@ -104,7 +104,7 @@ public class Vista extends JFrame implements ActionListener, KeyListener {
 		
 		calculos = new Calculos();
 		generador = new Generador();
-		calculos.setPlanificador(generador.getPlanificador("SJF"));
+		calculos.setPlanificador(generador.getPlanificador("SJFE"));
 		this.setFocusable(true);
 		
 	}
@@ -124,7 +124,7 @@ public class Vista extends JFrame implements ActionListener, KeyListener {
 			model.addColumn("tras");
 			model.addRow(new Object[]{"Nombre","Llegada" ,"Rafaga" ,"Finalizacion" ,"Espera", "Transcurso"});
 			for(int i = 0 ; i < calculos.getRegistros().size(); i++) {
-				RegistroCalculo rc = calculos.getRegistros().get(i);
+				RegistroCalculo rc = calculos.getRegistros().get("p"+i);
 				model.addRow(new Object[]
 					{
 						rc.getNombre(),

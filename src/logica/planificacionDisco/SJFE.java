@@ -1,12 +1,12 @@
 package logica.planificacionDisco;
 
-public class SJF extends Planificacion {
-	
+public class SJFE extends Planificacion {
+
 	@Override
 	public void agregar(String nombre, int rafaga, int llegada) {
 		Nodo nodo = new Nodo(nombre);
-		nodo.setLlegada(llegada);
 		nodo.setRafaga(rafaga);
+		nodo.setLlegada(llegada);
 		Nodo pre = this.cabeza;
 		Nodo pos = this.cabeza.getSig();
 		if (pos.equals(this.cabeza)) {
@@ -14,8 +14,11 @@ public class SJF extends Planificacion {
 			this.cabeza.setSig(nodo);
 			return;
 		}
-		int transcurrido = pos.getLlegada();
+		int transcurrido = 0;
 		while (!pos.equals(this.cabeza)) {
+			if (pos.getLlegada() > transcurrido) {
+				transcurrido = pos.getLlegada();
+			}
 			if (nodo.getLlegada() <= transcurrido) {
 				while (!pos.equals(this.cabeza)) {
 					if (nodo.getRafaga() < pos.getRafaga()) {
@@ -29,9 +32,17 @@ public class SJF extends Planificacion {
 				nodo.setSig(pos);
 				pre.setSig(nodo);
 				return;
-			}
-			if (pos.getLlegada() > transcurrido){
-				transcurrido = pos.getLlegada();
+			} else if (nodo.getLlegada() < transcurrido + pos.getRafaga()) {
+				int rafagaRestante = transcurrido + pos.getRafaga() - nodo.getLlegada();
+				if (rafagaRestante > nodo.getRafaga()) {
+					Nodo corte = new Nodo(pos.getNombre());
+					corte.setRafaga(rafagaRestante);
+					pos.setRafaga(pos.getRafaga() - rafagaRestante);
+					corte.setSig(pos.getSig());
+					nodo.setSig(corte);
+					pos.setSig(nodo);
+					return;
+				}
 			}
 			transcurrido += pos.getRafaga();
 			pre = pos;

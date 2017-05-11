@@ -11,6 +11,7 @@ public class Generador {
 		generadores = new HashMap<String, GeneradorPlanificador>();
 		generadores.put("FIFO", new GeneradorFIFO());
 		generadores.put("SJF", new GeneradorSJF());
+		generadores.put("SJFE", new GeneradorSJFE());
 	}
 	
 	public Planificacion getPlanificador(String planificador){

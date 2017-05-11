@@ -6,10 +6,12 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import javax.swing.Timer;
 
+import logica.calculos.NodoCalculo;
 import logica.calculos.RegistroCalculo;
 
 public class CanvasGantt extends Canvas implements ActionListener{
@@ -19,7 +21,6 @@ public class CanvasGantt extends Canvas implements ActionListener{
 	//variables de entorno grafico
 	private BufferedImage imagen;
 	private Graphics graficas;
-	private Color[] colores;
 	
 	//variables de proporciones en pantalla
 	private int segmentoHorizontal;
@@ -34,7 +35,7 @@ public class CanvasGantt extends Canvas implements ActionListener{
 	private int pocY;
 	
 	//datos a pintar
-	private ArrayList<RegistroCalculo> registros;
+	private HashMap<String, RegistroCalculo> registros;
 	
 	//variables de timer
 	private int tiempoActual;
@@ -43,30 +44,22 @@ public class CanvasGantt extends Canvas implements ActionListener{
 	
 	public CanvasGantt() {
 		this.setBackground(Color.white);
-		this.segmentoHorizontal = 20;
+		this.segmentoHorizontal = 30;
 		this.segmentoVertical = 20;
 		this.wt = this.getWidth();
 		this.ht = this.getHeight();
-		this.registros = new ArrayList<>();
-		this.difH = 50;
-		this.difV = 50;
+		this.registros = new HashMap<String, RegistroCalculo>();
+		this.difH = 150;
+		this.difV = 100;
 		this.pocX = 0;
 		this.pocY = 0;
-		colores = new Color[7];
-		colores[0] = Color.red;
-		colores[1] = Color.orange;
-		colores[2] = Color.yellow;
-		colores[3] = Color.green;
-		colores[4] = Color.blue;
-		colores[5] = Color.magenta;
-		colores[6] = Color.cyan;
 	}
 	
-	public void setRegistro(ArrayList<RegistroCalculo> registros) {
+	public void setRegistro(HashMap<String, RegistroCalculo> registros) {
 		this.registros = registros;
 		this.tiempoActual = 0;
 		this.finalizadoProcesos = false;
-		this.timer = new Timer (1000, this);
+		this.timer = new Timer (100, this);
 		this.timer.start();
 	}
 	
@@ -78,10 +71,10 @@ public class CanvasGantt extends Canvas implements ActionListener{
 	private BufferedImage pintarGantt() {
 		int lines = registros.size();
 		int columns = 0;
-		if(lines > 0) {
-			columns = registros.get(registros.size() - 1).getTranscurrido();
-		} else {
-			columns = 0;
+		for(Entry<String, RegistroCalculo> entry : registros.entrySet()) {
+			if(entry.getValue().getFinalizacion() > columns){
+			    columns = entry.getValue().getFinalizacion();
+			}
 		}
 		int width = (columns + 4) * segmentoHorizontal;
 		int height = (lines + 7) * segmentoVertical;
@@ -97,52 +90,58 @@ public class CanvasGantt extends Canvas implements ActionListener{
 		graficas = imagen.getGraphics();
 		graficas.setColor(Color.white);
 		graficas.fillRect(0,0 , this.wt, this.ht);
-		for(int i = 0; i<lines; i++) {
-			RegistroCalculo rc = registros.get(i);
-			if(rc.getLlegada() < this.tiempoActual) {
-				int anchoEspera = 0;
-				if (rc.getLlegada()+ rc.getEspera() < this.tiempoActual) {
-					anchoEspera = rc.getEspera();
-				} else {
-					anchoEspera = this.tiempoActual - rc.getLlegada();
-				}
-				// pintar tiempo espera
-				graficas.setColor(Color.black);
-				graficas.drawString(rc.getNombre(), segmentoHorizontal - 7, (i + 3) * segmentoVertical - 7);
-				graficas.fillRect(
-					(rc.getLlegada() + 2) * segmentoHorizontal,
-					(i + 2) * segmentoVertical + 7,
-					segmentoHorizontal * anchoEspera,
-					segmentoVertical * 1/3);
-				// pintar ejecucion
-				if (rc.getLlegada()+ rc.getEspera() < this.tiempoActual) {
-					int anchoRafaga = 0;
-					if (rc.getLlegada()+ rc.getEspera()+rc.getRafada() < this.tiempoActual) {
-						anchoRafaga = rc.getRafada();
+		int i = 0;
+		for(i = 0; i<lines; i++) {
+		    RegistroCalculo rc = registros.get("p"+i);
+			int nodesLine = rc.getNodos().size();
+			graficas.setColor(Color.black);
+			graficas.drawString(rc.getNombre(), segmentoHorizontal - 7, (i + 3) * segmentoVertical - 7);
+			graficas.setColor(rc.getColor());
+			for(int j = 0; j<nodesLine; j++){
+				NodoCalculo nc = rc.getNodos().get(j);
+				// tiempo espera
+				if(nc.getLlegada() < this.tiempoActual) {
+					int anchoEspera = 0;
+					if (nc.getInicio() < this.tiempoActual) {
+						anchoEspera = nc.getInicio() - nc.getLlegada();
 					} else {
-						anchoRafaga = this.tiempoActual - (rc.getLlegada()+ rc.getEspera());
+						anchoEspera = this.tiempoActual - nc.getLlegada();
 					}
-					graficas.setColor(colores[i % colores.length]);
+					// pintar tiempo espera
 					graficas.fillRect(
-						(rc.getLlegada()+ rc.getEspera() + 2)*segmentoHorizontal,
-						(i + 2)*segmentoVertical,
-						segmentoHorizontal * anchoRafaga,
-						segmentoVertical);
-					graficas.fillRect(
-						(rc.getLlegada()+ rc.getEspera() + 2)*segmentoHorizontal,
-						(lines + 3) * segmentoVertical,
-						segmentoHorizontal * anchoRafaga,
-						segmentoVertical);
-				}
-				//verificacion terminacion
-				if(i == lines - 1){
-					this.finalizadoProcesos = (rc.getTranscurrido() <= this.tiempoActual);
+						(nc.getLlegada() + 2) * segmentoHorizontal,
+						(i + 2) * segmentoVertical + 7,
+						segmentoHorizontal * anchoEspera,
+						segmentoVertical * 1/3);
+					// pintar ejecucion
+					if (nc.getInicio() < this.tiempoActual) {
+						int anchoRafaga = 0;
+						if (nc.getInicio()+ nc.getRafaga() < this.tiempoActual) {
+							anchoRafaga = nc.getRafaga();
+						} else {
+							anchoRafaga = this.tiempoActual - nc.getInicio();
+						}
+						graficas.fillRect(
+							(nc.getInicio() + 2)*segmentoHorizontal,
+							(i + 2)*segmentoVertical,
+							segmentoHorizontal * anchoRafaga,
+							segmentoVertical);
+						graficas.fillRect(
+							(nc.getInicio() + 2)*segmentoHorizontal,
+							(lines + 3) * segmentoVertical,
+							segmentoHorizontal * anchoRafaga,
+							segmentoVertical);
+					}
+					//verificacion terminacion
+					if(i == lines - 1){
+						this.finalizadoProcesos = (columns <= this.tiempoActual);
+					}
 				}
 			}
 		}
 		// pintar numeros
 		graficas.setColor(Color.black);
-		for(int i = 0; i<=columns; i++){
+		for(i = 0; i<=columns; i++){
 			graficas.drawString(i+"", segmentoHorizontal * (i + 2), segmentoVertical);
 			graficas.drawString(i+"", segmentoHorizontal * (i + 2), segmentoVertical * (lines + 5));
 			graficas.drawLine(

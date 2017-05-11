@@ -1,6 +1,8 @@
 package logica.calculos;
 
-import logica.planificacionDisco.Nodo;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class RegistroCalculo {
 	private int llegada;
@@ -9,22 +11,23 @@ public class RegistroCalculo {
 	private int finalizacion;
 	private int transcurrido;
 	private String nombre;
+	private ArrayList<NodoCalculo> nodos;
+	private Color color;
 	
-	public RegistroCalculo(Nodo nodo, int finalAnt) {
-		this(nodo.getNombre(), nodo.getLlegada(), nodo.getRafaga(), finalAnt);
-	}
-
-	public RegistroCalculo(String nombre,int llegada, int rafaga, int finalAnt) {
-		this.llegada = llegada;
-		this.rafada = rafaga;
-		if(llegada > finalAnt){
-			this.espera = 0;
-		} else {
-			this.espera = finalAnt - llegada;
-		}
-		this.finalizacion = this.espera + rafaga;
-		this.transcurrido = this.finalizacion + llegada;
+	public RegistroCalculo(String nombre, int llegada) {
 		this.nombre = nombre;
+		this.llegada = llegada;
+		this.rafada = 0;
+		this.espera = 0;
+		this.finalizacion = 0;
+		this.transcurrido = 0;
+		Random rand = new Random();
+		this.nodos = new ArrayList<NodoCalculo>();
+		this.color = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+	}
+	
+	public Color getColor(){
+		return this.color;
 	}
 	
 	public int getLlegada() {
@@ -50,5 +53,20 @@ public class RegistroCalculo {
 	public String getNombre(){
 		return nombre;
 	}
+	
+	public ArrayList<NodoCalculo> getNodos(){
+		return this.nodos;
+	}
+	
+	public void addNodoRegistro(NodoCalculo nodo){
+		this.rafada += nodo.getRafaga();
+		this.espera += (nodo.getInicio() - nodo.getLlegada());
+		if(nodo.getInicio() + nodo.getRafaga() > this.finalizacion){
+			this.finalizacion = nodo.getInicio() + nodo.getRafaga();
+		}
+		this.transcurrido = this.finalizacion - this.llegada;
+		this.nodos.add(nodo);
+	}
+	
 	
 }

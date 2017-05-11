@@ -17,7 +17,7 @@ public class Test {
 		scan = new Scanner(System.in);
 		int contador = 0;
 		int anteriorLlegada = 0;
-		Planificacion fifo = generador.getPlanificador("SJF");
+		Planificacion fifo = generador.getPlanificador("SJFE");
 		while(true){
 			Nodo cabeza = fifo.getCabeza();
 			Nodo nodo = cabeza.getSig();
