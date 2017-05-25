@@ -10,17 +10,21 @@ public class RegistroCalculo {
 	private int espera;
 	private int finalizacion;
 	private int transcurrido;
+	private int bloqueado;
+	private int prioridad;
 	private String nombre;
 	private ArrayList<NodoCalculo> nodos;
 	private Color color;
 	
-	public RegistroCalculo(String nombre, int llegada) {
+	public RegistroCalculo(String nombre, int llegada, int prioridad) {
 		this.nombre = nombre;
 		this.llegada = llegada;
+		this.prioridad = prioridad;
 		this.rafada = 0;
 		this.espera = 0;
 		this.finalizacion = 0;
 		this.transcurrido = 0;
+		this.bloqueado = 0;
 		Random rand = new Random();
 		this.nodos = new ArrayList<NodoCalculo>();
 		this.color = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
@@ -58,13 +62,20 @@ public class RegistroCalculo {
 		return this.nodos;
 	}
 	
+	public int getBloqueado() {
+		return bloqueado;
+	}
+
+	public int getPrioridad() {
+		return prioridad;
+	}
+
 	public void addNodoRegistro(NodoCalculo nodo){
 		this.rafada += nodo.getRafaga();
 		this.espera += (nodo.getInicio() - nodo.getLlegada());
-		if(nodo.getInicio() + nodo.getRafaga() > this.finalizacion){
-			this.finalizacion = nodo.getInicio() + nodo.getRafaga();
-		}
 		this.transcurrido = this.finalizacion - this.llegada;
+		this.finalizacion = nodo.getInicio() + nodo.getRafaga();
+		this.bloqueado = nodo.getBloqueado();
 		this.nodos.add(nodo);
 	}
 	

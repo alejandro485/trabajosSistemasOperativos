@@ -1,18 +1,28 @@
-package logica.planificacionDisco;
+package logica.planificacion;
 
 public class Nodo {
 	private String nombre;
 	private int rafaga;
 	private int llegada;
 	private Nodo sig;
+	private int prioridad;
 
 	public Nodo(String nombre) {
 		this.nombre = nombre;
 		this.llegada = 0;
 		this.rafaga = 0;
 		this.sig = null;
+		this.prioridad = 0;
 	}
 	
+	public int getPrioridad() {
+		return prioridad;
+	}
+
+	public void setPrioridad(int prioridad) {
+		this.prioridad = prioridad;
+	}
+
 	public void setRafaga(int rafaga){
 		this.rafaga = rafaga;
 	}
@@ -23,10 +33,6 @@ public class Nodo {
 
 	public void setSig(Nodo sig) {
 		this.sig = sig;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
 	}
 
 	public Nodo getSig() {
@@ -44,5 +50,4 @@ public class Nodo {
 	public int getLlegada() {
 		return llegada;
 	}
-	
 }

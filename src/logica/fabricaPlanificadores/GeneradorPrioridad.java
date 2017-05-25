@@ -1,13 +1,13 @@
 package logica.fabricaPlanificadores;
 
 import logica.planificacion.Planificacion;
-import logica.planificacion.SJFE;
+import logica.planificacion.Prioridad;
 
-public class GeneradorSJFE implements GeneradorPlanificador {
+public class GeneradorPrioridad implements GeneradorPlanificador {
 
 	@Override
 	public Planificacion getPlanificador() {
-		return new SJFE();
+		return new Prioridad();
 	}
 
 }

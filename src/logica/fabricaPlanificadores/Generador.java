@@ -2,7 +2,7 @@ package logica.fabricaPlanificadores;
 
 import java.util.HashMap;
 
-import logica.planificacionDisco.Planificacion;
+import logica.planificacion.Planificacion;
 
 public class Generador {
 	private HashMap<String, GeneradorPlanificador> generadores;
@@ -12,6 +12,8 @@ public class Generador {
 		generadores.put("FIFO", new GeneradorFIFO());
 		generadores.put("SJF", new GeneradorSJF());
 		generadores.put("SJFE", new GeneradorSJFE());
+		generadores.put("Prioridad", new GeneradorPrioridad());
+		generadores.put("Round", new GeneradorRound());
 	}
 	
 	public Planificacion getPlanificador(String planificador){

@@ -1,7 +1,7 @@
 package logica.fabricaPlanificadores;
 
-import logica.planificacionDisco.Planificacion;
-import logica.planificacionDisco.SJF;
+import logica.planificacion.Planificacion;
+import logica.planificacion.SJF;
 
 public class GeneradorSJF implements GeneradorPlanificador {
 

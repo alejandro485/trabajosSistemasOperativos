@@ -1,6 +1,6 @@
 package logica.fabricaPlanificadores;
 
-import logica.planificacionDisco.Planificacion;
+import logica.planificacion.Planificacion;
 
 public interface GeneradorPlanificador {
 	public Planificacion getPlanificador();

@@ -3,27 +3,23 @@ package logica.calculos;
 import java.util.HashMap;
 import java.util.Random;
 
-import logica.planificacionDisco.Nodo;
-import logica.planificacionDisco.Planificacion;
+import logica.planificacion.Nodo;
+import logica.planificacion.Planificacion;
 
 public class Calculos {
 	private Nodo cabeza;
+	private Nodo bloqueado;
 	private Planificacion planificador;
+	private int tiempoTotal;
 	private int contador;
-	private int anteriorLlegada;
-	private int finalAnt;
 	private HashMap<String, RegistroCalculo> registros;
 	
 	public Calculos() {
+		this.tiempoTotal = 0;
 		this.contador = 0;
-		this.anteriorLlegada = 0;
 		this.registros = new HashMap<String, RegistroCalculo>();
 	}
-	
-	public Planificacion getPlanificador() {
-		return planificador;
-	}
-	
+
 	public HashMap<String, RegistroCalculo> getRegistros(){
 		return this.registros;
 	}
@@ -31,56 +27,79 @@ public class Calculos {
 	public void setPlanificador(Planificacion planificador) {
 		this.planificador = planificador;
 		this.cabeza = this.planificador.getCabeza();
+		this.bloqueado = this.planificador.getBloqueado();
 	}
 	
 	public void agregar() {
 	    Random rand = new Random();
-	    int randomNum = rand.nextInt(20);
-	    int rafagaAnt = 9;
-	    int ayudaRafaga = 0;
-	    for(int i = 0; i< randomNum; i++){
-	    	ayudaRafaga = 1+rand.nextInt(rafagaAnt);
-	    	rafagaAnt -= rand.nextInt(3);
-	    	if(rafagaAnt < 4){
-	    		rafagaAnt = 9;
+	    int totalProcesos = 20;
+	    int procesosEnMomento = 0;
+	    int rafaga = 0;
+	    int prioridad = 0;
+	    this.contador = 0;
+	    while (totalProcesos > 0) {
+	    	procesosEnMomento = 1 + rand.nextInt(3);
+	    	for (int i = 0; i < procesosEnMomento; i++) {
+		    	this.planificador.temporizador(this.tiempoTotal);
+	    		rafaga = 1 + rand.nextInt(12);
+	    		prioridad = 1 + rand.nextInt(3);
+	    		Nodo nodo = new Nodo(""+this.contador);
+	    		nodo.setLlegada(this.tiempoTotal);
+	    		nodo.setRafaga(rafaga);
+	    		nodo.setPrioridad(prioridad);
+	    		this.planificador.agregar(nodo);
+	    		this.contador+= 1;
 	    	}
-	    	planificador.agregar("p"+contador, ayudaRafaga, anteriorLlegada);
-	    	anteriorLlegada += rand.nextInt(3);
-	    	contador++;
+	    	/*
+	    	if (rand.nextBoolean() && rand.nextBoolean() && false) {
+	    		this.planificador.temporizador(this.tiempoTotal);
+	    		this.planificador.bloquear(this.tiempoTotal);
+	    	}*/
+	    	if (rand.nextBoolean() && rand.nextBoolean()) {
+		    	this.planificador.temporizador(this.tiempoTotal);
+	    		this.planificador.desbloquear(this.tiempoTotal);
+	    	}
+	    	totalProcesos -= procesosEnMomento;
+	    	this.tiempoTotal += 1;
+	    }
+	    while(this.tiempoTotal < 200) {
+	    	this.planificador.temporizador(this.tiempoTotal);
+	    	this.tiempoTotal++;
 	    }
 	}
 
 	public void calcular() {
 		Nodo nodo = planificador.remover();
+		int finalAnterior = 0;
 		RegistroCalculo rc;
 		while(!nodo.equals(this.cabeza)) {
+			NodoCalculo nc = new NodoCalculo();
 			if(this.registros.containsKey(nodo.getNombre())){
 				rc = this.registros.get(nodo.getNombre());
-				nodo.setLlegada(rc.getFinalizacion());
+				nc.setBloqueado(rc.getFinalizacion());
 			} else {
-				rc = new RegistroCalculo(nodo.getNombre(), nodo.getLlegada());
+				rc = new RegistroCalculo(nodo.getNombre(), nodo.getLlegada(), nodo.getPrioridad());
 				this.registros.put(nodo.getNombre(), rc);
+				nc.setBloqueado(nodo.getLlegada());
 			}
-			NodoCalculo nc = new NodoCalculo();
 			nc.setRafaga(nodo.getRafaga());
 			nc.setLlegada(nodo.getLlegada());
-			if(nodo.getLlegada()>this.finalAnt) {
+			if(nodo.getLlegada() > finalAnterior) {
 				nc.setInicio(nodo.getLlegada());
-				this.finalAnt = nc.getInicio() + nc.getRafaga();
+				finalAnterior = nc.getInicio() + nc.getRafaga();
 			} else {
-				nc.setInicio(this.finalAnt);
-				this.finalAnt += nc.getRafaga();
+				nc.setInicio(finalAnterior);
+				finalAnterior += nc.getRafaga();
 			}
 			rc.addNodoRegistro(nc);
 			nodo = planificador.remover();
 		}
-		this.anteriorLlegada = this.finalAnt;
+		this.tiempoTotal = finalAnterior;
 	}
 	
 	public void limpiar() {
-		this.finalAnt = 0;
-		this.anteriorLlegada = 0;
-		this.contador = 0;
+		this.registros.clear();
+		
 	}
 	
 }

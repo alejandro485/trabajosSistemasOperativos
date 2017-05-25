@@ -1,7 +1,7 @@
 package logica.fabricaPlanificadores;
 
-import logica.planificacionDisco.FIFO;
-import logica.planificacionDisco.Planificacion;
+import logica.planificacion.FIFO;
+import logica.planificacion.Planificacion;
 
 public class GeneradorFIFO implements GeneradorPlanificador {
 
