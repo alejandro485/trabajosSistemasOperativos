@@ -11,22 +11,13 @@ public class Round extends Planificacion {
 
 	@Override
 	public void agregar(Nodo nodo) {
-		Nodo pre = this.procesoAnterior;
-		Nodo pos = this.procesoActual;
-		if(this.tiempoEnProceso != 0){
+		Nodo pre = this.procesoActual;
+		Nodo pos = this.procesoActual.getSig();
+		while (!pos.equals(this.cabeza)) {
 			pre = pos;
 			pos = pos.getSig();
 		}
-		while(!pos.equals(this.cabeza)) {
-			if (nodo.getRafaga() < pos.getRafaga()) {
-				nodo.setSig(pos);
-				pre.setSig(nodo);
-				return;
-			}
-			pre = pos;
-			pos = pos.getSig();
-		}
-		nodo.setSig(pos);
+		nodo.setSig(this.cabeza);
 		pre.setSig(nodo);
 	}
 	
@@ -43,7 +34,6 @@ public class Round extends Planificacion {
 			}
 			this.tiempoEnProceso = tiempoActual - transcurrido;
 			if(this.tiempoEnProceso == this.quiebre && this.tiempoEnProceso < pos.getRafaga()) {
-				System.out.println("proceso roto: "+pos.getNombre());
 				int rafagaRestante = pos.getRafaga() - this.tiempoEnProceso;
 				pos.setRafaga(pos.getRafaga() - rafagaRestante);
 				Nodo corte = new Nodo(pos.getNombre());

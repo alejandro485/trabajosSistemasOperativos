@@ -40,7 +40,7 @@ public class PintarBloqueo implements ComandoGraficar {
 		if(this.bloqueo < this.tiempoActual){
 			g.setColor(Color.red);
 			int anchoEspera = 0;
-			if (this.bloqueo < this.tiempoActual) {
+			if (this.llegada < this.tiempoActual) {
 				anchoEspera = this.llegada - this.bloqueo;
 			} else {
 				anchoEspera = this.tiempoActual - this.bloqueo;

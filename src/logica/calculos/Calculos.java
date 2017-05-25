@@ -50,21 +50,28 @@ public class Calculos {
 	    		this.planificador.agregar(nodo);
 	    		this.contador+= 1;
 	    	}
-	    	/*
-	    	if (rand.nextBoolean() && rand.nextBoolean() && false) {
+	    	if (rand.nextBoolean()) {
 	    		this.planificador.temporizador(this.tiempoTotal);
 	    		this.planificador.bloquear(this.tiempoTotal);
-	    	}*/
-	    	if (rand.nextBoolean() && rand.nextBoolean()) {
+	    	}
+	    	if (rand.nextBoolean() && rand.nextBoolean() && rand.nextBoolean()) {
 		    	this.planificador.temporizador(this.tiempoTotal);
 	    		this.planificador.desbloquear(this.tiempoTotal);
 	    	}
 	    	totalProcesos -= procesosEnMomento;
 	    	this.tiempoTotal += 1;
 	    }
+	    while(!this.bloqueado.getSig().equals(this.bloqueado)){
+	    	if (rand.nextBoolean()) {
+		    	this.planificador.temporizador(this.tiempoTotal);
+	    		this.planificador.desbloquear(this.tiempoTotal);
+	    	}
+		    this.bloqueado = this.planificador.getBloqueado();
+		    this.tiempoTotal += 1;
+	    }
 	    while(this.tiempoTotal < 200) {
-	    	this.planificador.temporizador(this.tiempoTotal);
-	    	this.tiempoTotal++;
+	    	this.planificador.temporizador(this.tiempoTotal);	    	
+	    	this.tiempoTotal += 1;
 	    }
 	}
 
