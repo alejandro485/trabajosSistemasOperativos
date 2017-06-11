@@ -7,5 +7,5 @@ public class Medidas {
 	public final static int ALTO = 540;
 	public final static int DIFERENCIAL_HORIZONTAL = 150;
 	public final static int DIFERENCIAL_VERTICAL = 100;
-	public final static int DIFERENCIAL_TIEMPO = 100;
+	public final static int DIFERENCIAL_TIEMPO = 1000;
 }

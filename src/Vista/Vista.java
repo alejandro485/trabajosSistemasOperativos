@@ -96,12 +96,12 @@ public class Vista extends JFrame implements ActionListener {
 		contentPane.add(tbCalculos);
 
 		canvas = new CanvasGantt();
-		canvas.setBounds(290, 20, 690, 540);
+		canvas.setBounds(290, 20, Medidas.ANCHO, Medidas.ALTO);
 		contentPane.add(canvas);
 
 		calculos = new Calculos();
 		generador = new Generador();
-		calculos.setPlanificador(generador.getPlanificador("Round"));
+		calculos.setPlanificador(generador.getPlanificador("Prioridad"));
 		this.setFocusable(true);
 
 	}
